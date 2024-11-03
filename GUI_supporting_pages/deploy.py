@@ -274,9 +274,13 @@ class Deploy(ctk.CTkFrame):
 
     def next_page(self):
         args_json = json.dumps(self.controller.args_dict)
-        # Path to the script in another folder
-        script_path = os.path.join("/home/krovilab/Project-Varuna-MMPK-Package/dist", "koopman")
-        # self.controller.show_frame("Modeling")
+        # Path to the package in parent folder
+
+        # Get the parent directory of the current script's directory
+        parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+        # Define the path to the target file in the parent directory
+        script_path = os.path.join(parent_dir, "dist", "koopman")
         try:
             result = subprocess.run(
                 [script_path, args_json],

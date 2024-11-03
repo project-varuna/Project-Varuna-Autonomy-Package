@@ -1,8 +1,8 @@
 import customtkinter as ctk
 import tkinter as tk  # Needed for some underlying functionalities
-from modeling import Modeling
-from planning_controls import Planning_Controls
-from deploy import Deploy
+from GUI_supporting_pages.modeling import Modeling
+from GUI_supporting_pages.planning_controls import Planning_Controls
+from GUI_supporting_pages.deploy import Deploy
 import signal
 import sys
 

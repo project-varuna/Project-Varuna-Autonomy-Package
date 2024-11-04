@@ -14,11 +14,13 @@ Ensure you have Python 3.8+ installed along with ROS1 noetic.
 1. **Clone the Repository**  
    First, clone this repository:
    ```bash
-   git clone https://github.com/yourusername/Project-Varuna.git
-   cd Project-Varuna
+   git clone https://github.com/project-varuna/Project-Varuna-Autonomy-Package.git
 
 2. **Download the package file**  
+   ![Release](Images/Release-page.png) 
+
    Download the latest package file from the [Releases](https://github.com/project-varuna/Project-Varuna-Autonomy-Package/releases) page and place it in the repository's root directory.
+
 
 3. **Install Requirements**  
    Install the dependencies, primarily `customtkinter` for the front-end application:

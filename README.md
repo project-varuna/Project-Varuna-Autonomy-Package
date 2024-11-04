@@ -75,3 +75,61 @@ For questions, feedback, or support, please reach out to the Project Varuna team
 - **Email**: [ajinkya.projectvaruna@gmail.com](ajinkya.projectvaruna@gmail.com)
 - **GitHub Issues**: For any bug reports or feature requests, use the [issue tracker](https://github.com/yourusername/Project-Varuna/issues).
 - **Contributors**: If you’d like to collaborate or discuss larger contributions, feel free to reach out directly!
+
+
+
+## Citation
+
+If you use Project-Varuna for research or validation purposes, please reference and cite the following:
+
+#### [Expanding Autonomous Ground Vehicle Navigation Capabilities through a Multi-Model Parameterized Koopman Framework](https://www.researchgate.net/publication/380152547_Expanding_Autonomous_Ground_Vehicle_Navigation_Capabilities_through_a_Multi-Model_Parameterized_Koopman_Framework)
+```bibtex
+@unknown{Joglekar_MMPK,
+author = {Joglekar, Ajinkya and Samak, Chinmay and Samak, Tanmay and Krovi, Venkat and Vaidya, Umesh},
+year = {2024},
+month = {04},
+pages = {},
+title = {Expanding Autonomous Ground Vehicle Navigation Capabilities through a Multi-Model Parameterized Koopman Framework},
+doi = {10.13140/RG.2.2.33007.24485}
+}
+```
+
+#### [Modeling and Control of Off-road Autonomous Vehicles with Situationally Aware Data-Driven Framework](https://www.researchgate.net/publication/383427789_Modeling_and_Control_of_Off-road_Autonomous_Vehicles_with_Situationally_Aware_Data-Driven_Framework)
+```bibtex
+@unknown{Joglekar_Adaptive_MMPK,
+author = {Joglekar, Ajinkya and Vaidya, Umesh and Krovi, Venkat},
+year = {2024},
+month = {08},
+pages = {},
+title = {Modeling and Control of Off-road Autonomous Vehicles with Situationally Aware Data-Driven Framework},
+doi = {10.13140/RG.2.2.13288.48642}
+}
+```
+
+
+
+#### [Data-Driven Modeling and Experimental Validation of Autonomous Vehicles Using Koopman Operator](https://www.researchgate.net/publication/380152547_Expanding_Autonomous_Ground_Vehicle_Navigation_Capabilities_through_a_Multi-Model_Parameterized_Koopman_Framework)
+```bibtex
+@inproceedings{inproceedings,
+author = {Joglekar, Ajinkya and Sutavani, Sarang and Samak, Chinmay and Samak, Tanmay and Kosaraju, Krishna and Smereka, Jonathon and Gorsich, David and Vaidya, Umesh and Krovi, Venkat},
+year = {2023},
+month = {10},
+pages = {9442-9447},
+title = {Data-Driven Modeling and Experimental Validation of Autonomous Vehicles Using Koopman Operator},
+doi = {10.1109/IROS55552.2023.10341797}
+}
+```
+
+#### [Analytical Construction of Koopman EDMD Candidate Functions for Optimal Control of Ackermann-Steered Vehicles](https://par.nsf.gov/servlets/purl/10491343)
+```bibtex
+@article{article,
+author = {Joglekar, Ajinkya and Samak, Chinmay and Samak, Tanmay and Kosaraju, Krishna and Smereka, Jonathon and Brudnak, Mark and Gorsich, David and Krovi, Venkat and Vaidya, Umesh},
+year = {2023},
+month = {01},
+pages = {619-624},
+title = {Analytical Construction of Koopman EDMD Candidate Functions for Optimal Control of Ackermann-Steered Vehicles},
+volume = {56},
+journal = {IFAC-PapersOnLine},
+doi = {10.1016/j.ifacol.2023.12.093}
+}
+```

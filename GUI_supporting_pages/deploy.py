@@ -280,7 +280,7 @@ class Deploy(ctk.CTkFrame):
         parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
         # Define the path to the target file in the parent directory
-        script_path = os.path.join(parent_dir, "dist", "koopman")
+        script_path = os.path.join(parent_dir, "koopman")
         try:
             result = subprocess.run(
                 [script_path, args_json],

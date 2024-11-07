@@ -29,8 +29,17 @@ Ensure you have Python 3.8+ installed along with ROS1 noetic.
    pip install -r requirements.txt
 
 ## Running the Application  
-To launch the Project Varuna front-end interface, run:
 
+**Note: IMPORTANT**  
+Before you launch the GUI, make sure that you launch all the relevant `roslaunch` files for your simulator/hardware and that the relevant nodes/topics are published.
+
+Additionally, make sure the binary has been given the required permissions using:
+
+```bash
+chmod +x koopman
+```
+
+To launch the Project Varuna front-end interface, run:
 ```bash
 python3 Project-Varuna-GUI.py
 ```

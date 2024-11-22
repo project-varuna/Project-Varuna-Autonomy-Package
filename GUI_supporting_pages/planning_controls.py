@@ -165,19 +165,19 @@ class Planning_Controls(ctk.CTkFrame):
         self.available_topics = self.get_available_rostopics()  # Get available ROS topics
         self.selected_pose_topic = ctk.StringVar(value=self.available_topics[0])  # Initialize variable
         self.pose_topic_dropdown = ctk.CTkOptionMenu(self.topic_selection_frame, variable=self.selected_pose_topic,
-                                                     values=self.available_topics)
+                                                     values=self.available_topics,command=self.save_pose_topic_info)
         self.pose_topic_dropdown.grid(row=2, column=0, padx=(0, 10), pady=(10, 10), sticky="ew")
 
         # Radio buttons for selecting Pose Type
         self.pose_type_selection = ctk.StringVar(value=0)  # Default to 0
         self.pose_type_point = ctk.CTkRadioButton(self.topic_selection_frame, text="Point",
                                                   variable=self.pose_type_selection,
-                                                  value=0, command=self.save_pose_topic_info)
+                                                  value=0, command=self.save_pose_topic_type)
         self.pose_type_point.grid(row=2, column=2, padx=(10, 10), pady=(10, 10), sticky="ew")
 
         self.pose_type_2d = ctk.CTkRadioButton(self.topic_selection_frame, text="Pose 2D",
                                                variable=self.pose_type_selection,
-                                               value=1, command=self.save_pose_topic_info)
+                                               value=1, command=self.save_pose_topic_type)
         self.pose_type_2d.grid(row=2, column=3, padx=(10, 10), pady=(10, 10), sticky="ew")
         self.rostopic_imu_label = ctk.CTkLabel(self.topic_selection_frame, text="IMU topic", anchor="w")
         self.rostopic_imu_label.grid(row=3, column=0, columnspan=2, sticky="ew")
@@ -389,12 +389,18 @@ class Planning_Controls(ctk.CTkFrame):
         self.controller.args_dict['Planning_Controls']['N'] = model_control_horizon
         self.controller.args_dict['Planning_Controls']['N_p'] = planner_horizon
 
-    def save_pose_topic_info(self):
+    def save_pose_topic_type(self):
         pose_type_map = {0: "Point", 1: "Pose2D"}
-        pose_topic = self.selected_pose_topic.get()
+        # pose_topic = self.selected_pose_topic.get()
+        # print('Pose topic is:*************',pose_topic)
         topic_type = self.pose_type_selection.get()
-        self.controller.args_dict['Planning_Controls']['Pose_topic'] = pose_topic
+        # self.controller.args_dict['Planning_Controls']['Pose_topic'] = pose_topic
         self.controller.args_dict['Planning_Controls']['Pose_type'] = pose_type_map[int(topic_type)]
+
+    def save_pose_topic_info(self,value):
+        print('Pose topic is:',value)
+        self.controller.args_dict['Planning_Controls']['Pose_topic'] = value
+
 
     def save_imu_topic_info(self,value):
         self.controller.args_dict['Planning_Controls']['IMU_topic'] = value

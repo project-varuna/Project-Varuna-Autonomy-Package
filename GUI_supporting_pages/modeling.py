@@ -2,6 +2,8 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox  # For displaying a warning dialog
+import re # For str comparisons
+import math
 
 class Modeling(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -102,18 +104,18 @@ class Modeling(ctk.CTkFrame):
         self.modeling_textbox.configure(state="disabled")
 
         # create radiobutton frame
-        self.radiobutton_frame = ctk.CTkFrame(self)
-        self.radiobutton_frame.grid(row=0, column=3,columnspan=2 ,padx=(20, 20), pady=(20, 0), sticky="nsew")
+        self.platform_selection_frame = ctk.CTkFrame(self)
+        self.platform_selection_frame.grid(row=0, column=3,columnspan=2 ,padx=(20, 20), pady=(20, 0), sticky="nsew")
         self.radio_var_platform = tk.IntVar(value=0)
         # Setup default value of MMPK type
         self.controller.args_dict['Modeling']['MMPK_Type'] = 'Static'
-        self.label_radio_group = ctk.CTkLabel(master=self.radiobutton_frame, text="Platform")
+        self.label_radio_group = ctk.CTkLabel(master=self.platform_selection_frame, text="Platform")
         self.label_radio_group.grid(row=0, column=0, columnspan=1, padx=10, pady=10, sticky="")
-        self.radio_button_1 = ctk.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var_platform, value=0,text='F1tenth',command=self.update_platform)
+        self.radio_button_1 = ctk.CTkRadioButton(master=self.platform_selection_frame, variable=self.radio_var_platform, value=0,text='F1tenth',command=self.update_ui_switch_platform)
         self.radio_button_1.grid(row=1, column=0, pady=10, padx=20, sticky="n")
-        self.radio_button_2 = ctk.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var_platform, value=1,text='Hunter',command=self.update_platform)
+        self.radio_button_2 = ctk.CTkRadioButton(master=self.platform_selection_frame, variable=self.radio_var_platform, value=1,text='Hunter',command=self.update_ui_switch_platform)
         self.radio_button_2.grid(row=2, column=0, pady=10, padx=20, sticky="n")
-        self.radio_button_3 = ctk.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var_platform, value=2,text='MRazr',state=tk.DISABLED)
+        self.radio_button_3 = ctk.CTkRadioButton(master=self.platform_selection_frame, variable=self.radio_var_platform, value=2,text='Custom',command=self.update_ui_switch_platform)
         self.radio_button_3.grid(row=3, column=0, pady=10, padx=20, sticky="n")
 
         # create slider and progressbar frame
@@ -181,7 +183,107 @@ class Modeling(ctk.CTkFrame):
         self.controller.show_frame("MotionPlanning")
 
 
-    # GUI/data update functions
+    '''GUI/data update functions'''
+
+    # Args value update functions
+    def update_ui_switch_platform(self):
+        for widget in self.data_selection_frame.grid_slaves():
+            if int(widget.grid_info()['column']) > 2:
+                widget.grid_forget()  # Remove widgets from previous selection
+
+        # Update the dictionary based on the selected radio button
+        selected_value = self.radio_var_platform.get()
+        print(selected_value)
+
+        # Map radio button values to platform names
+        platform_map = {0: "F1tenth", 1: "Hunter", 2: "Custom"}
+
+        # Update the dictionary with the selected platform
+        self.controller.args_dict['Modeling']['Platform'] = platform_map[selected_value]
+
+        # Print the updated dictionary (for debugging purposes)
+        print(self.controller.args_dict['Modeling']['Platform'])
+        print('Selected-value', selected_value)
+        if selected_value == 1 or selected_value == 2:
+            self.radio_var_mmpk_mode = tk.IntVar(value=0)
+            self.label_mmpk_type = ctk.CTkLabel(master=self.platform_selection_frame, text="MMPK Type")
+            self.label_mmpk_type.grid(row=0, column=1, columnspan=1, padx=10, pady=10, sticky="")
+            self.mmpk_static_radio_button = ctk.CTkRadioButton(master=self.platform_selection_frame,
+                                                               variable=self.radio_var_mmpk_mode,
+                                                               value=0, text='Static', command=self.update_mmpk_type)
+            self.mmpk_static_radio_button.grid(row=1, column=1, pady=10, padx=20, sticky="n")
+            self.mmpk_adaptive_radio_button = ctk.CTkRadioButton(master=self.platform_selection_frame,
+                                                                 variable=self.radio_var_mmpk_mode,
+                                                                 value=1, text='Adaptive',
+                                                                 command=self.update_mmpk_type)
+            self.mmpk_adaptive_radio_button.grid(row=2, column=1, pady=10, padx=20, sticky="n")
+
+        # If F1tenth is selected, remove the MMPK options
+        else:
+            self.controller.args_dict['Modeling']['MMPK_Type'] = 'Static'
+            # Remove MMPK related widgets if they exist
+            if hasattr(self, 'label_mmpk_type'):
+                self.label_mmpk_type.grid_forget()
+            if hasattr(self, 'mmpk_static_radio_button'):
+                self.mmpk_static_radio_button.grid_forget()
+            if hasattr(self, 'mmpk_adaptive_radio_button'):
+                self.mmpk_adaptive_radio_button.grid_forget()
+
+        # Update GUI for custom platform
+        if selected_value == 2:
+            self.update_ui_custom_platform()
+        else:
+            # Remove MMPK related widgets if they exist
+            if hasattr(self, 'label_platform_name'):
+                self.label_platform_name.grid_forget()
+            # Forget custom platform name
+            if hasattr(self, 'platform_name_text'):
+                self.platform_name_text.grid_forget()
+            if hasattr(self, 'entry_platform_name'):
+                self.entry_platform_name.grid_forget()
+            # Forget custom platform vel
+            if hasattr(self, 'platform_vel_lim_text'):
+                self.platform_vel_lim_text.grid_forget()
+            if hasattr(self, 'entry_platform_vel_lim'):
+                self.entry_platform_vel_lim.grid_forget()
+            # Forget custom platform steer
+            if hasattr(self, 'platform_steer_lim_text'):
+                self.platform_steer_lim_text.grid_forget()
+            if hasattr(self, 'entry_platform_steer_lim'):
+                self.entry_platform_steer_lim.grid_forget()
+            # # Forget apply button
+            if hasattr(self, 'platform_save_button'):
+                self.platform_save_button.grid_forget()
+
+
+    def update_ui_custom_platform(self):
+        self.label_platform_name = ctk.CTkLabel(master=self.platform_selection_frame, text="Platform details")
+        self.label_platform_name.grid(row=0, column=2, columnspan=1, pady=10, sticky="")
+
+
+
+        # Add Entry: Platform name
+        self.platform_name_text = ctk.CTkLabel(self.platform_selection_frame, text="Name:",anchor="w")
+        self.platform_name_text.grid(row=1, column=2, pady=(10, 10), sticky="ew")
+        self.entry_platform_name = ctk.CTkEntry(master=self.platform_selection_frame)
+        self.entry_platform_name.grid(row=1, column=3, pady=10, sticky="w")
+
+        # Add Entry: Platform velocity limit
+        self.platform_vel_lim_text = ctk.CTkLabel(self.platform_selection_frame, text="Max velocity (m/s):",anchor="w")
+        self.platform_vel_lim_text.grid(row=2, column=2, pady=(10, 10), sticky="ew")
+        self.entry_platform_vel_lim = ctk.CTkEntry(master=self.platform_selection_frame)
+        self.entry_platform_vel_lim.grid(row=2, column=3, pady=10, sticky="w")
+
+        # Add Entry: Platform steering limit
+        self.platform_steer_lim_text = ctk.CTkLabel(self.platform_selection_frame, text="Steering limits (rad): \u00B1",anchor="w")
+        self.platform_steer_lim_text.grid(row=3, column=2, pady=(10, 10), sticky="ew")
+        self.entry_platform_steer_lim = ctk.CTkEntry(master=self.platform_selection_frame)
+        self.entry_platform_steer_lim.grid(row=3, column=3, pady=10, sticky="w")
+
+        # Add a Button to trigger saving num of MMPK models
+        self.platform_save_button = ctk.CTkButton(master=self.platform_selection_frame, text="Apply", command=self.save_custom_platform)
+        self.platform_save_button.grid(row=4, column=2, pady=10)
+
     def update_ui_model_data(self):
         """Updates the UI based on the radio button selection."""
         self.update_trained_model()
@@ -319,48 +421,29 @@ class Modeling(ctk.CTkFrame):
         self.controller.args_dict['Modeling']['Num_models'] = num_models
 
 
-    # Args value update functions
-    def update_platform(self):
-        for widget in self.data_selection_frame.grid_slaves():
-            if int(widget.grid_info()['column']) > 2:
-                widget.grid_forget()  # Remove widgets from previous selection
+    def save_custom_platform(self):
+        platform_name = self.entry_platform_name.get()  # Get value from state penalty entry
+        platform_vel_lim = self.entry_platform_vel_lim.get()
+        platform_steering_lim = self.entry_platform_steer_lim.get()
 
-        # Update the dictionary based on the selected radio button
-        selected_value = self.radio_var_platform.get()
-        print(selected_value)
+        '''Perform checks'''
+        # Validation: Check if name is valid
+        if not self.validate_platform_name(platform_name):
+            self.show_warning_name("Name")
+            return
+        # Validation: Check if vel lim is valid
+        if not self.validate_velocity_limit(platform_vel_lim):
+            self.show_warning_vel_lim("Max velocity")
+            return
+        # Validation: Check if vel lim is valid
+        if not self.validate_steering_limits(platform_steering_lim):
+            self.show_warning_steer_lim("Steering limits")
+            return
 
-        # Map radio button values to platform names
-        platform_map = {0: "F1tenth", 1: "Hunter", 2: "MRazr"}
-
-        # Update the dictionary with the selected platform
-        self.controller.args_dict['Modeling']['Platform'] = platform_map[selected_value]
-
-        # Print the updated dictionary (for debugging purposes)
-        print(self.controller.args_dict['Modeling']['Platform'])
-
-        if selected_value == 1:
-            self.radio_var_mmpk_mode = tk.IntVar(value=0)
-            self.label_mmpk_type = ctk.CTkLabel(master=self.radiobutton_frame, text="MMPK Type")
-            self.label_mmpk_type.grid(row=0, column=1, columnspan=1, padx=10, pady=10, sticky="")
-            self.mmpk_static_radio_button = ctk.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var_mmpk_mode,
-                                                     value=0, text='Static',command=self.update_mmpk_type)
-            self.mmpk_static_radio_button.grid(row=1, column=1, pady=10, padx=20, sticky="n")
-            self.mmpk_adaptive_radio_button = ctk.CTkRadioButton(master=self.radiobutton_frame, variable=self.radio_var_mmpk_mode,
-                                                     value=1, text='Adaptive',command=self.update_mmpk_type)
-            self.mmpk_adaptive_radio_button.grid(row=2, column=1, pady=10, padx=20, sticky="n")
-
-
-
-        # If F1tenth is selected, remove the MMPK options
-        else:
-            self.controller.args_dict['Modeling']['MMPK_Type'] = 'Static'
-            # Remove MMPK related widgets if they exist
-            if hasattr(self, 'label_mmpk_type'):
-                self.label_mmpk_type.grid_forget()
-            if hasattr(self, 'mmpk_static_radio_button'):
-                self.mmpk_static_radio_button.grid_forget()
-            if hasattr(self, 'mmpk_adaptive_radio_button'):
-                self.mmpk_adaptive_radio_button.grid_forget()
+        '''Update data to dict'''
+        self.controller.args_dict['Modeling']['Platform_Custom_Name'] = platform_name
+        self.controller.args_dict['Modeling']['Platform_Custom_Vel_Lim'] = platform_vel_lim
+        self.controller.args_dict['Modeling']['Platform_Custom_Steer_Lim'] = platform_steering_lim
 
     def update_mmpk_type(self):
         mmpk_map = {0: "Static", 1: "Adaptive"}
@@ -401,11 +484,50 @@ class Modeling(ctk.CTkFrame):
         self.controller.args_dict['Modeling']['Test_data_type'] = data_type_map[int(selected_value)]
 
     '''Functions for value check'''
+
     def validate_num_models(self, input_str):
+        try:
+            # Attempt to convert the input string to an integer
+            int_val = int(input_str)
+            # Ensure the input string is not a float (check for a decimal point)
+            if '.' in input_str:
+                return False
+            return True
+        except ValueError:
+            # If conversion to integer fails, return False
+            return False
+
+    def validate_platform_name(self, input_str):
+        # Regular expression to check if the string contains only alphanumeric characters (no spaces, no special characters)
+        if re.match("^[a-zA-Z0-9]*$", input_str):
+            return True
+        else:
+            return False
+
+    def validate_velocity_limit(self, input_str):
         try:
             # Attempt to convert the input string to a float
             float_val = float(input_str)
-            return True
+
+            # Check if the float value is positive
+            if float_val > 0:
+                return True
+            else:
+                return False
+        except ValueError:
+            # If conversion to float fails, return False
+            return False
+
+    def validate_steering_limits(self, input_str):
+        try:
+            # Attempt to convert the input string to a float
+            float_val = float(input_str)
+
+            # Check if the float value is between -π/2 and π/2
+            if 0 <= float_val <= math.pi / 2:
+                return True
+            else:
+                return False
         except ValueError:
             # If conversion to float fails, return False
             return False
@@ -414,6 +536,17 @@ class Modeling(ctk.CTkFrame):
         messagebox.showwarning("Input Error",
                                f"Invalid input for {field_name}. Please enter 1 integer value denoting number of models in MMPK setup.")
 
+    def show_warning_name(self,field_name):
+        messagebox.showwarning("Input Error",
+                               f"Invalid input for {field_name}. Please enter name of platform without spaces and special characters.")
+
+    def show_warning_vel_lim(self,field_name):
+        messagebox.showwarning("Input Error",
+                               f"Invalid input for {field_name}. Please enter a single int/float value denoting velocity limit of the platform.")
+
+    def show_warning_steer_lim(self,field_name):
+        messagebox.showwarning("Input Error",
+                               f"Invalid input for {field_name}. Please enter a single positive int/float denoting just magnitude of steering limit for the platform. Must not exceed pi/2 i.e 1.5708 rad")
 
     def next_page(self):
         next_frame = self.controller.show_frame("Planning_Controls")

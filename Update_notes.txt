@@ -1,0 +1,15 @@
+
+11/27/2024
+***Modeling***:
+Fixed the validate num models condition so float input is not passed on
+Renamed update platform and moved to GUI functions category
+Created a new function for custom platform
+In this new GUI function, users can add name, velocity and control input for platform --yet to integrated with binaries
+Adding checks for name and control limits for platform
+
+11/15/2024
+***Planning/Controls***
+Fixed bugs causing the pose topic to not be selected and resort to the first available topic.
+Split the pose type and pose topic selection functions that were causing the selection issues.
+For instance if pose topic was selected prior to topic type then it was fine, the other way round wont change the topic as per later selection.
+Tested the codebase and GUI for static onroad and static + adaptive offroad models

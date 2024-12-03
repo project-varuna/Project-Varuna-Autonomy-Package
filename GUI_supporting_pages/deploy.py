@@ -114,22 +114,12 @@ class Deploy(ctk.CTkFrame):
         # Disable the textbox to prevent user editing
         self.modeling_textbox.configure(state="disabled")
 
-        # create radiobutton frame
-        self.modeling_summary_frame = ctk.CTkFrame(self)
-        self.modeling_summary_frame.grid(row=0, column=3, columnspan=2,padx=(20, 20), pady=(20, 0), sticky="nsew")
-        self.label_modeling_summary = ctk.CTkLabel(master=self.modeling_summary_frame, text="Modeling Summary")
-        self.label_modeling_summary.grid(row=0, column=0, padx=10, pady=10, sticky="")
-        self.label_modeling_coming_soon = ctk.CTkLabel(master=self.modeling_summary_frame, text="Coming soon in next v1.0.1 update")
-        self.label_modeling_coming_soon.grid(row=1, column=0, padx=10, pady=10, sticky="")
-
 
         # Save test record and run selection pane
         self.test_record_frame = ctk.CTkFrame(self, fg_color="transparent")
         self.test_record_frame.grid(row=1,column=1, columnspan=2, padx=(20, 0), pady=(20, 0), sticky="nsew")
         self.test_record_frame.grid_columnconfigure(0, weight=1)
         self.test_record_frame.grid_rowconfigure(4, weight=1)
-
-
         self.label_select_traj = ctk.CTkLabel(master=self.test_record_frame, text="Select the trajectory index from test data folder")
         self.label_select_traj.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
@@ -161,13 +151,51 @@ class Deploy(ctk.CTkFrame):
         self.update_ui_save_data()
 
 
-        # create radiobutton frame for training and test data
+        # Create a frame for summary
+        self.modeling_summary_frame = ctk.CTkFrame(self)
+        self.modeling_summary_frame.grid(row=0, column=3, columnspan=2,padx=(20, 20), pady=(20, 0), sticky="nsew")
+        self.label_modeling_summary = ctk.CTkLabel(master=self.modeling_summary_frame, text="Modeling Summary")
+        self.label_modeling_summary.grid(row=0, column=0, padx=10, pady=10, sticky="")
+        self.modeling_summary = self.format_dict_for_display(self.controller.args_dict['Modeling'])
+        self.modeling_summary_text = ctk.CTkLabel(master=self.modeling_summary_frame, text=self.modeling_summary,
+                                                  anchor="w",  # Left-align the text
+                                                  justify="left",  # Justify the text to the left to make it look neat
+                                                  font=("Arial", 15),  # Set font and size (customize as you like)
+                                                  width=600,  # Optional: specify a fixed width to make it look uniform
+                                                  height=150,  # Optional: specify a fixed height
+                                                  corner_radius=10,  # Optional: round corners for a soft look
+                                                  fg_color=("white", "gray25"),  # Background color for light/dark mode
+                                                  text_color=("black", "white"),  # Text color for light/dark mode
+                                                  padx=10,  # Padding inside the label
+                                                  pady=10,  # Padding inside the label
+                                                  )
+        self.modeling_summary_text.grid(row=1, column=0, padx=10, pady=10, sticky="")
+        # self.label_modeling_coming_soon = ctk.CTkLabel(master=self.modeling_summary_frame, text="Coming soon in next v1.0.1 update")
+        # self.label_modeling_coming_soon.grid(row=1, column=0, padx=10, pady=10, sticky="")
+
+        # Create a frame for summary
         self.planner_controller_summary_frame = ctk.CTkFrame(self)
         self.planner_controller_summary_frame.grid(row=1, column=3, columnspan=2, padx=(20, 20), pady=(20, 0), sticky="nsew")
         self.label_planner_controller_summary = ctk.CTkLabel(master=self.planner_controller_summary_frame, text="Motion Planner -- Controller Summary")
         self.label_planner_controller_summary.grid(row=0, column=0, padx=10, pady=10, sticky="")
-        self.label_planner_controller_coming_soon = ctk.CTkLabel(master=self.planner_controller_summary_frame, text="Coming soon in next v1.0.1 update")
-        self.label_planner_controller_coming_soon.grid(row=1, column=0, padx=10, pady=10, sticky="")
+        self.planning_control_summary = self.format_dict_for_display(self.controller.args_dict['Planning_Controls'])
+        self.planning_control_summary_text = ctk.CTkLabel(
+            master=self.planner_controller_summary_frame,
+            text=self.planning_control_summary,
+            anchor="w",  # Left-align the text
+            justify="left",  # Justify the text to the left to make it look neat
+            font=("Arial", 15),  # Set font and size (customize as you like)
+            width=600,  # Optional: specify a fixed width to make it look uniform
+            height=150,  # Optional: specify a fixed height
+            corner_radius=10,  # Optional: round corners for a soft look
+            fg_color=("white", "gray25"),  # Background color for light/dark mode
+            text_color=("black", "white"),  # Text color for light/dark mode
+            padx=10,  # Padding inside the label
+            pady=10,  # Padding inside the label
+        )
+        self.planning_control_summary_text.grid(row=1, column=0, padx=10, pady=10, sticky="")
+        # self.label_planner_controller_coming_soon = ctk.CTkLabel(master=self.planner_controller_summary_frame, text="Coming soon in next v1.0.1 update")
+        # self.label_planner_controller_coming_soon.grid(row=1, column=0, padx=10, pady=10, sticky="")
 
 
 
@@ -217,6 +245,62 @@ class Deploy(ctk.CTkFrame):
 
 
     '''GUI/data update functions'''
+
+    def update_ui_summary(self):
+        # Remove old summary labels if they exist
+        if hasattr(self, 'modeling_summary_text'):
+            self.modeling_summary_text.grid_forget()
+        if hasattr(self, 'planning_control_summary_text'):
+            self.planning_control_summary_text.grid_forget()
+        # self.label_modeling_summary = ctk.CTkLabel(master=self.modeling_summary_frame, text="Modeling Summary")
+        # self.label_modeling_summary.grid(row=0, column=0, padx=10, pady=10, sticky="")
+        #
+        # # Format the Modeling and Planning_Controls summaries
+        # self.modeling_summary = self.format_dict_for_display(self.controller.args_dict['Modeling'])
+        # self.planning_controls_summary = self.format_dict_for_display(self.controller.args_dict['Planning_Controls'])
+        #
+        # # Combine both sections into one summary string
+        # self.final_summary = f"Modeling Selection:\n{self.modeling_summary}\nPlanning Controls Selection:\n{self.planning_controls_summary}"
+        #
+        # # Label to display the summary
+        # self.label_modeling_summary_details = ctk.CTkLabel(master=self.modeling_summary_frame, text=self.final_summary,
+        #                                                    anchor="w",
+        #                                                    justify="left")
+        # self.label_modeling_summary_details.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+        self.modeling_summary = self.format_dict_for_display(self.controller.args_dict['Modeling'])
+        self.modeling_summary_text = ctk.CTkLabel(master=self.modeling_summary_frame,
+                                                  text=self.modeling_summary,
+                                                  anchor="w",  # Left-align the text
+                                                  justify="left",  # Justify the text to the left to make it look neat
+                                                  font=("Arial", 15),  # Set font and size (customize as you like)
+                                                  width=600,  # Optional: specify a fixed width to make it look uniform
+                                                  height=150,  # Optional: specify a fixed height
+                                                  corner_radius=10,  # Optional: round corners for a soft look
+                                                  fg_color=("white", "gray25"),  # Background color for light/dark mode
+                                                  text_color=("black", "white"),  # Text color for light/dark mode
+                                                  padx=10,  # Padding inside the label
+                                                  pady=10,  # Padding inside the label
+                                                  )
+        self.modeling_summary_text.grid(row=1, column=0, padx=10, pady=10, sticky="")
+        # Update Motion Planner and Controller Selection
+        self.planning_control_summary = self.format_dict_for_display(self.controller.args_dict['Planning_Controls'])
+        self.planning_control_summary_text = ctk.CTkLabel(
+            master=self.planner_controller_summary_frame,
+            text=self.planning_control_summary,
+            anchor="w",  # Left-align the text
+            justify="left",  # Justify the text to the left to make it look neat
+            font=("Arial", 15),  # Set font and size (customize as you like)
+            width=600,  # Optional: specify a fixed width to make it look uniform
+            height=150,  # Optional: specify a fixed height
+            corner_radius=10,  # Optional: round corners for a soft look
+            fg_color=("white", "gray25"),  # Background color for light/dark mode
+            text_color=("black", "white"),  # Text color for light/dark mode
+            padx=10,  # Padding inside the label
+            pady=10,  # Padding inside the label
+        )
+        self.planning_control_summary_text.grid(row=1, column=0, padx=10, pady=10, sticky="")
+
+
     def update_ui_save_data(self):
         """Updates the UI based on the radio button selection."""
         self.update_save_data()
@@ -247,7 +331,16 @@ class Deploy(ctk.CTkFrame):
 
 
     ''' Helper functions'''
+    '''Function to combine key value data from dict'''
 
+    def refresh(self):
+        self.update_ui_summary()
+
+    def format_dict_for_display(self,dictionary):
+        summary = ""
+        for key, value in dictionary.items():
+            summary += f"{key}: {value}\n"
+        return summary
 
 
     '''Directory/ model selection functions'''

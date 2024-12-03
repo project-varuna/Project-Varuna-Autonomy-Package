@@ -193,7 +193,7 @@ class Modeling(ctk.CTkFrame):
 
         # Update the dictionary based on the selected radio button
         selected_value = self.radio_var_platform.get()
-        print(selected_value)
+        # print(selected_value)
 
         # Map radio button values to platform names
         platform_map = {0: "F1tenth", 1: "Hunter", 2: "Custom"}
@@ -202,8 +202,8 @@ class Modeling(ctk.CTkFrame):
         self.controller.args_dict['Modeling']['Platform'] = platform_map[selected_value]
 
         # Print the updated dictionary (for debugging purposes)
-        print(self.controller.args_dict['Modeling']['Platform'])
-        print('Selected-value', selected_value)
+        # print(self.controller.args_dict['Modeling']['Platform'])
+        # print('Selected-value', selected_value)
         if selected_value == 1 or selected_value == 2:
             self.radio_var_mmpk_mode = tk.IntVar(value=0)
             self.label_mmpk_type = ctk.CTkLabel(master=self.platform_selection_frame, text="MMPK Type")
@@ -254,6 +254,10 @@ class Modeling(ctk.CTkFrame):
             # # Forget apply button
             if hasattr(self, 'platform_save_button'):
                 self.platform_save_button.grid_forget()
+            # Delete the data entry in dict
+            self.controller.args_dict['Modeling'].pop('Platform_Custom_Name', None)
+            self.controller.args_dict['Modeling'].pop('Platform_Custom_Vel_Lim', None)
+            self.controller.args_dict['Modeling'].pop('Platform_Custom_Steer_Lim',None)
 
 
     def update_ui_custom_platform(self):
@@ -304,6 +308,12 @@ class Modeling(ctk.CTkFrame):
 
             self.folder_label_model = ctk.CTkLabel(self.data_selection_frame, text="No folder selected", anchor="w")
             self.folder_label_model.grid(row=2, column=1, padx=(10, 10), pady=(5, 10), sticky="ew")
+            '''Delete parameters from dict related to train model if this option is selected'''
+            self.controller.args_dict['Modeling'].pop('Num_models',None)
+            self.controller.args_dict['Modeling'].pop('Train_data_folder',None)
+            self.controller.args_dict['Modeling'].pop('Save_Trained_Model',None)
+            self.controller.args_dict['Modeling'].pop('Model_save_dir',None)
+
 
         # Condition for training a model
         else:
@@ -449,7 +459,7 @@ class Modeling(ctk.CTkFrame):
         mmpk_map = {0: "Static", 1: "Adaptive"}
         mmpk_type = self.radio_var_mmpk_mode.get()
         self.controller.args_dict['Modeling']['MMPK_Type'] = mmpk_map[mmpk_type]
-        print(self.controller.args_dict['Modeling']['MMPK_Type'])
+        # print(self.controller.args_dict['Modeling']['MMPK_Type'])
 
     def update_trained_model(self):
         selected_mode = self.radio_var_trained_model.get()
@@ -468,7 +478,7 @@ class Modeling(ctk.CTkFrame):
 
         # Update the dictionary with the selected platform
         self.controller.args_dict['Modeling']['Train_data_type'] = data_type_map[int(selected_value)]
-        print(self.controller.args_dict['Modeling']['Train_data_type'])
+        # print(self.controller.args_dict['Modeling']['Train_data_type'])
 
         # Print the updated dictionary (for debugging purposes)
         # print(self.controller.args_dict['Modeling']['Platform'])

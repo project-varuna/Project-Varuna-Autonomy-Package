@@ -1,3 +1,14 @@
+12/02/23
+***Modeling,Planning,Deploy***
+Removed the print statements kept for debugging
+***Deploy***
+Added function to update the summary everytime page is called, triggered by planners control page
+Made changes to the modeling and planning summary frame to display the dict and values as a summary
+Made the text box formatting adjust to theme and appear uniform and readable
+***Modeling***:
+Deleted data entry keys from custom platform select if either F1Tenth or Hunter is selected
+***Motion Planning***:
+Added refresh function for deploy page summary in next page function
 
 11/27/2024
 ***Modeling***:
@@ -7,7 +18,7 @@ Created a new function for custom platform
 In this new GUI function, users can add name, velocity and control input for platform --yet to integrated with binaries
 Adding checks for name and control limits for platform
 
-11/15/2024
+11/15/2024ss
 ***Planning/Controls***
 Fixed bugs causing the pose topic to not be selected and resort to the first available topic.
 Split the pose type and pose topic selection functions that were causing the selection issues.

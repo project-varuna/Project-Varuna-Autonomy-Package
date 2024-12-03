@@ -261,7 +261,6 @@ class Planning_Controls(ctk.CTkFrame):
     '''Event functions'''
     def refresh(self):
         mmpk_type = self.controller.args_dict['Modeling'].get('MMPK_Type')
-        print(mmpk_type)
         if hasattr(self, 'rostopic_imu_label'):
             self.rostopic_imu_label.grid_forget()
         # if hasattr(self, 'imu_topic_dropdown'):
@@ -398,7 +397,6 @@ class Planning_Controls(ctk.CTkFrame):
         self.controller.args_dict['Planning_Controls']['Pose_type'] = pose_type_map[int(topic_type)]
 
     def save_pose_topic_info(self,value):
-        print('Pose topic is:',value)
         self.controller.args_dict['Planning_Controls']['Pose_topic'] = value
 
 
@@ -411,7 +409,6 @@ class Planning_Controls(ctk.CTkFrame):
         self.controller.args_dict['Planning_Controls']['IMU_frame_type'] = imu_type_map[int(imu_type)]
 
     def save_control_topic_single(self,value):
-        print(value)
         self.controller.args_dict['Planning_Controls']['Control_topic'] = value
 
 
@@ -463,12 +460,16 @@ class Planning_Controls(ctk.CTkFrame):
     '''Page switch'''
 
     def next_page(self):
-        print(self.controller.args_dict)
+        # print(self.controller.args_dict)
         next_frame = self.controller.show_frame("Deploy")
-        if hasattr(next_frame, 'print_arg_var'):
-            next_frame.print_arg_var()
+        # self.update_idletasks()
+        # if hasattr(next_frame, 'print_arg_var'):
+        #     next_frame.print_arg_var()
+        if hasattr(next_frame, 'refresh'):
+                next_frame.refresh()
         if hasattr(next_frame,'test_trajectory_selection_pane'):
             next_frame.test_trajectory_selection_pane()
+
 
     def previous_page(self):
         self.controller.show_frame("Modeling")

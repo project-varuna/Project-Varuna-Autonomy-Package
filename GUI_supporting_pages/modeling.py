@@ -17,10 +17,10 @@ class Modeling(ctk.CTkFrame):
         self.grid_rowconfigure(1, weight=1)
         self.grid_rowconfigure(2, weight=1)
         # self.grid_rowconfigure(3, weight=1)
+        # self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
-        self.grid_columnconfigure(3, weight=1)
-        self.grid_columnconfigure(4, weight=1)
+        # self.grid_columnconfigure(3, weight=1)
 
         # create sidebar frame with widgets
         self.modeling_sidebar_frame = ctk.CTkFrame(self, width=140, corner_radius=0)
@@ -85,7 +85,9 @@ class Modeling(ctk.CTkFrame):
                                      "Let's get started!!!\n\n"
 
                                      "1. **Select the Vehicle Platform:**\n"
-                                     "   - Either 1/10th (F1Tenth) or 1/5th (Hunter SE).\n\n"
+                                     "   - By default the 1/10th (F1Tenth) or 1/5th (Hunter SE) are available.\n"
+                                     "   - However, if you want to select a custom platform, enter the name and control limits on the right pane.\n\n"
+                                     
 
                                      "2. **Choose Your Model Setup:**\n"
                                      "   - If you have previously trained MMPK models, select the directory where they're stored.\n"
@@ -97,6 +99,7 @@ class Modeling(ctk.CTkFrame):
 
                                      "4. **Training/Test Data Format:**\n"
                                      "   - Choose the format for your training/test data (.csv in AutoDRIVE/ISAAC format or rosbag files).\n"
+                                     "   - Ensure the IMU information in the training and test data follows the ISO8855 (right hand rule) convention.\n\n"
 
                                      "5. **Important:**\n"
                                      "   - Check the file format requirements in the README file to avoid data-parsing errors.\n"

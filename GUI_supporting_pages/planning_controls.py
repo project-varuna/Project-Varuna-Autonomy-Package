@@ -17,8 +17,8 @@ class Planning_Controls(ctk.CTkFrame):
         # self.grid_rowconfigure(3, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
-        self.grid_columnconfigure(3, weight=1)
-        self.grid_columnconfigure(4, weight=1)
+        # self.grid_columnconfigure(3, weight=1)
+        # self.grid_columnconfigure(4, weight=1)
 
         # create sidebar frame with widgets
         self.modeling_sidebar_frame = ctk.CTkFrame(self, width=140, corner_radius=0)
@@ -95,7 +95,7 @@ class Planning_Controls(ctk.CTkFrame):
                                      "1. **Select rostopics for state estimation**\n"
                                      "   - First we select the topic to obtain pose estimate. Select the data type (rosmsg type) between Point and Pose2D\n"
                                      "   - Next choose the IMU topic from dropdown. Select the frame type between ISO 8855 and SAE J670\n"
-                                     "   - Even if you select SAE J670, it will be converted to ISO 8855 internally so maintain that convention for your training and test data \n\n"
+                                     "   - Even if you select SAE J670, it will be converted to ISO8855 internally to maintain that convention for your training and test data \n\n"
 
                                      "2. **Select rostopic for controls:**\n"
                                      "   - The user has the option to select either separate topics for throttle and steering or a single topic\n"

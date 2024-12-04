@@ -18,8 +18,8 @@ class Deploy(ctk.CTkFrame):
         self.grid_rowconfigure(2, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
-        self.grid_columnconfigure(3, weight=1)
-        self.grid_columnconfigure(4, weight=1)
+        # self.grid_columnconfigure(3, weight=1)
+        # self.grid_columnconfigure(4, weight=1)
 
         # create sidebar frame with widgets
         self.modeling_sidebar_frame = ctk.CTkFrame(self, width=140, corner_radius=0)
@@ -107,7 +107,7 @@ class Deploy(ctk.CTkFrame):
                                      "   - The user has the option to select either separate topics for throttle and steering or a single topic\n"
                                      "   - If separate topics are selected, they use the Float32 msg type, else we use the Twist message structure.\n\n"
 
-                                     "3. **Review your options from modeling planning and controls on the right pane (coming soon!)**\n\n"
+                                     "3. **Review your options from modeling planning and controls on the right pane **\n\n"
                
 
                                      "4. **Hit run and off we go! **\n\n")

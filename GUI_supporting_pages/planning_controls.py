@@ -102,7 +102,7 @@ class Planning_Controls(ctk.CTkFrame):
                                      "   - If separate topics are selected, they use the Float32 msg type, else we use the Twist message structure.\n\n"
 
                                      "3. **Setup state and control penalties for MPC:**\n"
-                                     "   - Since we opearte in Polar space and control vehicle via linear velocity/steering angle, the MPC costs should be 2 integers seperated by a space.\n"
+                                     "   - Since we opearte in Polar space and control vehicle via linear velocity/steering angle, the MPC costs should be 2 integers separated by a space.\n"
                                      "   - Don't forget to click apply!.\n\n"
 
                                      "4. **Select the preview horizon for controller and motion planner:**\n"
@@ -277,7 +277,7 @@ class Planning_Controls(ctk.CTkFrame):
 
     def update_ui_control_topic_select(self):
         # Map radio button values to platform names
-        control_topic_map = {0: "Single", 1: "Seperate"}
+        control_topic_map = {0: "Single", 1: "Separate"}
         selection = self.control_type.get()
         self.controller.args_dict['Planning_Controls']['Control_Type'] = control_topic_map[selection]
 

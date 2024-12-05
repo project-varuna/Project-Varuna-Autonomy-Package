@@ -369,24 +369,47 @@ class Deploy(ctk.CTkFrame):
         args_json = json.dumps(self.controller.args_dict)
         # Path to the package in parent folder
 
-        # Get the parent directory of the current script's directory
-        parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        dev_mode =False
+        if dev_mode == True:
+            print('Running app in dev mode: Running koopman.py script')
+            parent_dir = '/home/krovilab/Project-Varuna-V1_1/Project-Varuna-MMPK-Package'
+            script_path = os.path.join(parent_dir, "koopman.py")
+            # If in dev mode, run the Python script with the arguments
+            try:
+                result = subprocess.run(
+                    ["python3", script_path, "--arg_dict", args_json, "--dev_mode", "True"],  # Add 'python' to run the script
+                    check=True,
+                    capture_output=True,
+                    text=True
+                )
 
-        # Define the path to the target file in the parent directory
-        script_path = os.path.join(parent_dir, "koopman")
-        try:
-            result = subprocess.run(
-                [script_path, args_json],
-                check=True,
-                capture_output=True,
-                text=True
-            )
+                # Print the output from the Python script
+                print(f"Python script output: {result.stdout}")
 
-            # Print the output from the target script (or handle it in any way)
-            print(f"Script output: {result.stdout}")
+            except subprocess.CalledProcessError as e:
+                print(f"Error occurred while running the Python script: {e.stderr}")
 
-        except subprocess.CalledProcessError as e:
-            print(f"Error occurred: {e.stderr}")
+        else: # Condition for running in user mode
+            print('Running app as user through binary')
+            # Get the parent directory of the current script's directory
+            parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+            # Define the path to the target file in the parent directory
+            script_path = os.path.join(parent_dir, "koopman")
+
+            try:
+                result = subprocess.run(
+                    [script_path,  "--arg_dict", args_json],
+                    check=True,
+                    capture_output=True,
+                    text=True
+                )
+
+                # Print the output from the target script (or handle it in any way)
+                print(f"Script output: {result.stdout}")
+
+            except subprocess.CalledProcessError as e:
+                print(f"Error occurred: {e.stderr}")
 
     def previous_page(self):
         self.controller.show_frame("Planning_Controls")

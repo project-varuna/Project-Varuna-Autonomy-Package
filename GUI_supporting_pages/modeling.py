@@ -305,7 +305,7 @@ class Modeling(ctk.CTkFrame):
             self.model_label = ctk.CTkLabel(self.data_selection_frame, text="Load Model", anchor="w")
             self.model_label.grid(row=1, column=0, columnspan=2, sticky="ew")
 
-            self.select_file_model = ctk.CTkButton(self.data_selection_frame, text="Select Folder",
+            self.select_file_model = ctk.CTkButton(self.data_selection_frame, text="Select Model",
                                                      command=self.select_model)
             self.select_file_model.grid(row=2, column=0, padx=(0, 20), pady=(5, 10), sticky="ew")
 

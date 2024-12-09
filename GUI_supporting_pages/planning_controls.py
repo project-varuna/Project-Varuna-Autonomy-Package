@@ -332,6 +332,8 @@ class Planning_Controls(ctk.CTkFrame):
         # Radio button to save planner_type
         self.radio_var_planner_type = tk.IntVar(value=0)
 
+        self.controller.args_dict['Planning_Controls']['Planner_type'] = 'Curvature_based'
+
         # Curvature-based Reachability Planner radio button
         self.radio_button_curvature_planner = ctk.CTkRadioButton(master=self.planner_type_frame,
                                                                  variable=self.radio_var_planner_type,

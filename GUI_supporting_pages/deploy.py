@@ -372,7 +372,7 @@ class Deploy(ctk.CTkFrame):
         dev_mode =False
         if dev_mode == True:
             print('Running app in dev mode: Running koopman.py script')
-            parent_dir = '/home/krovilab/Project-Varuna-V1_1/Project-Varuna-MMPK-Package'
+            parent_dir = './Project-Varuna-MMPK-Package'
             script_path = os.path.join(parent_dir, "koopman.py")
             # If in dev mode, run the Python script with the arguments
             try:

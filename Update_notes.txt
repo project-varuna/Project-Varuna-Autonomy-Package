@@ -1,4 +1,30 @@
-12/02/23
+01/21/25
+***Modeling***
+Added new functionality to provide curvature limits
+***Minor bug fixes and improvements ***
+
+01/20/25
+***Modeling***
+Added new functionality to provide curvature limits
+***Minor bug fixes and improvements ***
+***Project Vaurna 1.2.1 binary***
+
+12/20/24
+***Deploy***
+Added dedicated dev mode for rapid debugging and feature updates
+***Minor bug fixes and improvements ***
+***Project Varuna 1.2 binary***
+
+12/10/24
+***Modeling,Planning,Deploy***
+Removed the print statements kept for debugging
+***Minor bug fixes and improvements ***
+*** Passed the curvature limit in polar_representation_2_state.py in the process for curvature limits
+<-Project Varuna binary updates: Soon to release in v1.3->
+*** Changed the curvature processing util to fit a quadratic spline across the segment and get curvature of the spline (Experimental --works)
+*** Made changes in the controls scripts to reflect the additional parameter for curvture calculation
+
+12/02/24
 ***Modeling,Planning,Deploy***
 Removed the print statements kept for debugging
 ***Deploy***

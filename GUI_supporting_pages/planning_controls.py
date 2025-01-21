@@ -286,12 +286,14 @@ class Planning_Controls(ctk.CTkFrame):
             if int(widget.grid_info()['row']) > 6:
                 widget.grid_forget()  # Remove widgets from previous selection
 
-        # Label for state estimation rostopic selection
-        self.rostopic_controls_selection_label = ctk.CTkLabel(self.topic_selection_frame,
-                                                 text="Select rostopic for control: The script publishes a Twist msg with command velocity (m/s) and steering angle (rad)", anchor="w")
-        self.rostopic_controls_selection_label.grid(row=6, column=0, padx=(0, 20), pady=(10, 10), sticky="ew")
+
 
         if selection == 0:
+            # Label for state estimation rostopic selection
+            self.rostopic_controls_selection_label = ctk.CTkLabel(self.topic_selection_frame,
+                                                                  text="Select rostopic for control: The script publishes a Twist msg with command velocity (m/s) and steering angle (rad)",
+                                                                  anchor="w")
+            self.rostopic_controls_selection_label.grid(row=6, column=0, padx=(0, 20), pady=(10, 10), sticky="ew")
             # Label for velocity topic
             self.rostopic_control_label = ctk.CTkLabel(self.topic_selection_frame, text="Combined control topic", anchor="w")
             self.rostopic_control_label.grid(row=7, column=0, columnspan=2, sticky="ew")
@@ -304,21 +306,21 @@ class Planning_Controls(ctk.CTkFrame):
         else:
             # Label for velocity topic
             self.rostopic_velocity_label = ctk.CTkLabel(self.topic_selection_frame, text="Throttle topic: The script with publish a percentage throttle (v/v_max set for the platform)", anchor="w")
-            self.rostopic_velocity_label.grid(row=7, column=0, columnspan=2, sticky="ew")
+            self.rostopic_velocity_label.grid(row=6, column=0, columnspan=2, sticky="ew")
             # Select velocity topic
             self.selected_velocity_topic = ctk.StringVar(value=self.available_topics[0])  # Initialize variable
             self.velocity_topic_dropdown = ctk.CTkOptionMenu(self.topic_selection_frame, variable=self.selected_velocity_topic,
                                                          values=self.available_topics,command=self.save_control_topic_vel)
-            self.velocity_topic_dropdown.grid(row=8, column=0, padx=(0, 10), pady=(10, 10), sticky="ew")
+            self.velocity_topic_dropdown.grid(row=7, column=0, padx=(0, 10), pady=(10, 10), sticky="ew")
 
             # Label for steering topic
             self.rostopic_steering_label = ctk.CTkLabel(self.topic_selection_frame, text="Steering topic: The script with publish a percentage steering \u00B1 (delta/delta_max set for the platform)", anchor="w")
-            self.rostopic_steering_label.grid(row=9, column=0, columnspan=2, sticky="ew")
+            self.rostopic_steering_label.grid(row=8, column=0, columnspan=2, sticky="ew")
             # Select steering topic
             self.selected_steering_topic = ctk.StringVar(value=self.available_topics[0])  # Initialize variable
             self.steering_topic_dropdown = ctk.CTkOptionMenu(self.topic_selection_frame, variable=self.selected_steering_topic,
                                                          values=self.available_topics,command=self.save_control_topic_steering)
-            self.steering_topic_dropdown.grid(row=10, column=0, padx=(0, 10), pady=(10, 10), sticky="ew")
+            self.steering_topic_dropdown.grid(row=9, column=0, padx=(0, 10), pady=(10, 10), sticky="ew")
 
     def update_ui_motion_planner_type(self,mmpk_type):
     # create radiobutton frame for type of planer

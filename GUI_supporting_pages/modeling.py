@@ -343,20 +343,33 @@ class Modeling(ctk.CTkFrame):
             save_button = ctk.CTkButton(master=self.data_selection_frame, text="Apply", command=self.save_num_models)
             save_button.grid(row=5, column=2, pady=10)
 
+            # Add an entry for curvature limits
+            self.curavture_limits_text = ctk.CTkLabel(self.data_selection_frame, text="Curvature limits (1/min turning radius): \u00B1 ",
+                                                   anchor="w")
+            self.curavture_limits_text.grid(row=6, column=0, padx=(0, 20), pady=(10, 10), sticky="ew")
+
+            # Add Entry: Num models in MMPK
+            self.entry_curvature_limits = ctk.CTkEntry(master=self.data_selection_frame)
+            self.entry_curvature_limits.grid(row=6, column=1, padx=10, pady=10, sticky="w")
+
+            # Add a Button to trigger saving num of MMPK models
+            save_button_curvature_lim = ctk.CTkButton(master=self.data_selection_frame, text="Apply", command=self.save_curvature_lim)
+            save_button_curvature_lim.grid(row=6, column=2, pady=10)
+
             self.save_model_text = ctk.CTkLabel(self.data_selection_frame, text="Save the trained model?",
                                                    anchor="w")
-            self.save_model_text.grid(row=6, column=0, padx=(0, 20), pady=(10, 10), sticky="ew")
+            self.save_model_text.grid(row=7, column=0, padx=(0, 20), pady=(10, 10), sticky="ew")
 
             self.radio_var_save_model = tk.IntVar(value=0)
             save_model_radio_button = ctk.CTkRadioButton(self.data_selection_frame, text='Yes',
                                                             variable=self.radio_var_save_model, value=0,
                                                             command=self.update_ui_save_model)
-            save_model_radio_button.grid(row=6, column=1, padx=(0, 10), sticky="w")
+            save_model_radio_button.grid(row=7, column=1, padx=(0, 10), sticky="w")
 
             save_model_radio_button = ctk.CTkRadioButton(self.data_selection_frame, text='No',
                                                             variable=self.radio_var_save_model, value=1,
                                                             command=self.update_ui_save_model)
-            save_model_radio_button.grid(row=6, column=2, padx=(10, 0), sticky="w")
+            save_model_radio_button.grid(row=7, column=2, padx=(10, 0), sticky="w")
             self.update_ui_save_model()
 
         self.test_label = ctk.CTkLabel(self.data_selection_frame, text="Test Data Directory",
@@ -373,19 +386,19 @@ class Modeling(ctk.CTkFrame):
         save_model_map = {0: True, 1: False}
         for widget in self.data_selection_frame.grid_slaves():
             # print(widget.grid_info())
-            if int(widget.grid_info()['row']) > 6:
+            if int(widget.grid_info()['row']) > 7:
                 widget.grid_forget()  # Remove widgets from previous selection
         if self.radio_var_save_model.get() == 0:
             self.controller.args_dict['Modeling']['Save_Trained_Model'] = save_model_map[int(self.radio_var_save_model.get())]
             self.save_model_folder = ctk.CTkButton(self.data_selection_frame, text="Select Folder",
                                                       command=self.select_model_save_dir)
-            self.save_model_folder.grid(row=7, column=0, padx=(0, 20), pady=(0, 10), sticky="ew")
+            self.save_model_folder.grid(row=8, column=0, padx=(0, 20), pady=(0, 10), sticky="ew")
             self.save_model_folder_text = ctk.CTkLabel(self.data_selection_frame, text="No folder selected", anchor="w")
-            self.save_model_folder_text.grid(row=7, column=1, padx=(10, 10), pady=(0, 10), sticky="ew")
+            self.save_model_folder_text.grid(row=8, column=1, padx=(10, 10), pady=(0, 10), sticky="ew")
         else:
             self.controller.args_dict['Modeling']['Save_Trained_Model'] = save_model_map[int(self.radio_var_save_model.get())]
             for widget in self.data_selection_frame.grid_slaves():
-                if int(widget.grid_info()['row']) > 6:
+                if int(widget.grid_info()['row']) > 7:
                     widget.grid_forget()  # Hide widgets by forgetting them
 
 
@@ -432,6 +445,15 @@ class Modeling(ctk.CTkFrame):
             return
 
         self.controller.args_dict['Modeling']['Num_models'] = num_models
+
+    def save_curvature_lim(self):
+        curvature_limits = self.entry_curvature_limits.get()  # Get value from state penalty entry
+        # Validation: Check if the input is two integers separated by a space
+        if not self.validate_curvature_lim(curvature_limits):
+            self.show_warning_curvature_lim("Curvature limits")
+            return
+
+        self.controller.args_dict['Modeling']['Curvature_limits'] = curvature_limits
 
 
     def save_custom_platform(self):
@@ -510,6 +532,20 @@ class Modeling(ctk.CTkFrame):
             # If conversion to integer fails, return False
             return False
 
+    def validate_curvature_lim(self, input_str):
+        try:
+            # Attempt to convert the input string to a float
+            float_val = float(input_str)
+
+            # Check if the float value is positive
+            if float_val > 0:
+                return True
+            else:
+                return False
+        except ValueError:
+            # If conversion to float fails, return False
+            return False
+
     def validate_platform_name(self, input_str):
         # Regular expression to check if the string contains only alphanumeric characters (no spaces, no special characters)
         if re.match("^[a-zA-Z0-9]*$", input_str):
@@ -548,6 +584,10 @@ class Modeling(ctk.CTkFrame):
     def show_warning_num_models(self,field_name):
         messagebox.showwarning("Input Error",
                                f"Invalid input for {field_name}. Please enter 1 integer value denoting number of models in MMPK setup.")
+
+    def show_warning_curvature_lim(self,field_name):
+        messagebox.showwarning("Input Error",
+                               f"Invalid input for {field_name}. Please enter a single int/float value denoting curvature limits of the platform.")
 
     def show_warning_name(self,field_name):
         messagebox.showwarning("Input Error",

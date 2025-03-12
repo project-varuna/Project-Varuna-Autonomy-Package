@@ -369,7 +369,7 @@ class Deploy(ctk.CTkFrame):
         args_json = json.dumps(self.controller.args_dict)
         # Path to the package in parent folder
 
-        dev_mode =True
+        dev_mode =False
         if dev_mode == True:
             print('Running app in dev mode: Running koopman.py script')
             parent_dir = '/home/krovilab/Project-Varuna-RZR/Project-Varuna-MMPK-Package'

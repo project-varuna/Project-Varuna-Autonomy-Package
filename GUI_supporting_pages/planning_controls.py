@@ -224,36 +224,6 @@ class Planning_Controls(ctk.CTkFrame):
         self.update_ui_control_topic_select()
 
 
-        # create radiobutton frame for training and test data
-        self.planner_control_horizon_frame = ctk.CTkFrame(self)
-        self.planner_control_horizon_frame.grid(row=1, column=3,columnspan=2, padx=(20, 20), pady=(20, 0), sticky="nsew")
-
-        # MPC Cost Label
-        self.label_preview = ctk.CTkLabel(master=self.planner_control_horizon_frame, text="Planner-Controller Preview")
-        self.label_preview.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-
-        # Add Label: State Penalty
-        self.label_mpc_horizon = ctk.CTkLabel(master=self.planner_control_horizon_frame, text="Prediction horizon for Model/Controller:")
-        self.label_mpc_horizon.grid(row=1, column=0, padx=10, pady=10, sticky="w")
-
-        # Add Entry: State Penalty Entry Box
-        self.entry_mpc_horizon = ctk.CTkEntry(master=self.planner_control_horizon_frame)
-        self.entry_mpc_horizon.grid(row=1, column=1, padx=10, pady=10, sticky="w")
-
-        # Add Label: Control Action Penalty
-        self.label_planner_horizon = ctk.CTkLabel(master=self.planner_control_horizon_frame, text="Prediction horizon for Motion Planner:")
-        self.label_planner_horizon.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-
-        # Add Entry: Control Action Penalty Entry Box
-        self.entry_planner_horizon = ctk.CTkEntry(master=self.planner_control_horizon_frame)
-        self.entry_planner_horizon.grid(row=2, column=1, padx=10, pady=10, sticky="w")
-
-        #Add a Button to trigger saving into the dictionary
-        save_button = ctk.CTkButton(master=self.planner_control_horizon_frame, text="Apply", command=self.save_horizon_values)
-        save_button.grid(row=3, column=1,  pady=10)
-
-
-
         self.appearance_mode_optionemenu.set("Dark")
         self.scaling_optionemenu.set("100%")
 
@@ -266,7 +236,9 @@ class Planning_Controls(ctk.CTkFrame):
         # if hasattr(self, 'imu_topic_dropdown'):
             # self.imu_topic_dropdown.grid_forget()
         # self.update_ui_rostopic_select(mmpk_type)
-        self.update_ui_motion_planner_type(mmpk_type)
+        self.planner_control_parameter_selection(mmpk_type)
+        self.update_ui_load_transfer_parameters(mmpk_type)
+        # self.update_ui_motion_planner_type(mmpk_type)
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         ctk.set_appearance_mode(new_appearance_mode)
@@ -322,14 +294,44 @@ class Planning_Controls(ctk.CTkFrame):
                                                          values=self.available_topics,command=self.save_control_topic_steering)
             self.steering_topic_dropdown.grid(row=9, column=0, padx=(0, 10), pady=(10, 10), sticky="ew")
 
-    def update_ui_motion_planner_type(self,mmpk_type):
-    # create radiobutton frame for type of planer
-        self.planner_type_frame = ctk.CTkFrame(self)
-        self.planner_type_frame.grid(row=2, column=3, columnspan=2, padx=(20, 20), pady=(20, 0), sticky="nsew")
+
+    '''Planner type and horizon selection'''
+    def planner_control_parameter_selection(self,mmpk_type):
+        self.planner_control_parameters_frame = ctk.CTkFrame(self)
+        self.planner_control_parameters_frame.grid(row=1, column=3, columnspan=2, padx=(20, 20), pady=(20, 0),
+                                                   sticky="nsew")
+
+        # MPC Cost Label
+        self.label_preview = ctk.CTkLabel(master=self.planner_control_parameters_frame,
+                                          text="Planner-Controller Preview")
+        self.label_preview.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+
+        # Add Label: State Penalty
+        self.label_mpc_horizon = ctk.CTkLabel(master=self.planner_control_parameters_frame,
+                                              text="Prediction horizon for Model/Controller:")
+        self.label_mpc_horizon.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+
+        # Add Entry: State Penalty Entry Box
+        self.entry_mpc_horizon = ctk.CTkEntry(master=self.planner_control_parameters_frame)
+        self.entry_mpc_horizon.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+        # Add Label: Control Action Penalty
+        self.label_planner_horizon = ctk.CTkLabel(master=self.planner_control_parameters_frame,
+                                                  text="Prediction horizon for Motion Planner:")
+        self.label_planner_horizon.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+
+        # Add Entry: Control Action Penalty Entry Box
+        self.entry_planner_horizon = ctk.CTkEntry(master=self.planner_control_parameters_frame)
+        self.entry_planner_horizon.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+
+        # Add a Button to trigger saving into the dictionary
+        save_button = ctk.CTkButton(master=self.planner_control_parameters_frame, text="Apply",
+                                    command=self.save_horizon_values)
+        save_button.grid(row=3, column=1, pady=10)
 
         # Planner Type Label
-        self.label_planner_type = ctk.CTkLabel(master=self.planner_type_frame, text="Planner-Controller Preview")
-        self.label_planner_type.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        self.label_planner_type = ctk.CTkLabel(master=self.planner_control_parameters_frame, text="Motion Planner Type")
+        self.label_planner_type.grid(row=4, column=0, padx=10, pady=10, sticky="w")
 
         # Radio button to save planner_type
         self.radio_var_planner_type = tk.IntVar(value=0)
@@ -337,18 +339,77 @@ class Planning_Controls(ctk.CTkFrame):
         self.controller.args_dict['Planning_Controls']['Planner_type'] = 'Curvature_based'
 
         # Curvature-based Reachability Planner radio button
-        self.radio_button_curvature_planner = ctk.CTkRadioButton(master=self.planner_type_frame,
+        self.radio_button_curvature_planner = ctk.CTkRadioButton(master=self.planner_control_parameters_frame,
                                                                  variable=self.radio_var_planner_type,
-                                                                 value=0, text='Curvature-based Reachability Planner',command=self.save_planner_type)
-        self.radio_button_curvature_planner.grid(row=1, column=0, pady=(5, 10), padx=(20, 10), sticky="w")
+                                                                 value=0, text='Curvature-based Reachability Planner',
+                                                                 command=self.save_planner_type)
+        self.radio_button_curvature_planner.grid(row=5, column=0, pady=(5, 10), padx=(20, 10), sticky="w")
 
         # Load-transfer based Reachability Planner radio button (only for 'Adaptive' type)
         if mmpk_type == 'Adaptive':
-            self.radio_button_load_transfer_planner = ctk.CTkRadioButton(master=self.planner_type_frame,
+            self.radio_button_load_transfer_planner = ctk.CTkRadioButton(master=self.planner_control_parameters_frame,
                                                                          variable=self.radio_var_planner_type,
                                                                          value=1,
-                                                                         text='Load-transfer based Reachability Planner',command=self.save_planner_type)
-            self.radio_button_load_transfer_planner.grid(row=2, column=0, pady=(5, 10), padx=(20, 10), sticky="w")
+                                                                         text='Load-transfer based Reachability Planner',
+                                                                         command=self.save_planner_type)
+            self.radio_button_load_transfer_planner.grid(row=6, column=0, pady=(5, 10), padx=(20, 10), sticky="w")
+
+        self.planner_load_transfer_frame = ctk.CTkFrame(self)
+        self.planner_load_transfer_frame.grid(row=2, column=3, columnspan=2, padx=(20, 20), pady=(20, 0), sticky="nsew")
+        self.vehicle_parameters = {}
+
+
+
+
+    def update_ui_load_transfer_parameters(self,mmpk_type):
+        ''' Here instead update it to take the weights if the load transfer based planner is selected'''
+        # If planner type is 0, destroy the widgets inside the frame
+        if mmpk_type == "Static":
+            # Remove the dictionary
+            if self.controller.args_dict.get('Planning_Controls', {}).get('Vehicle_Parameters') is not None:
+                del self.controller.args_dict['Planning_Controls']['Vehicle_Parameters']
+            for widget in self.planner_load_transfer_frame.winfo_children():
+                widget.destroy()  # Remove all widgets from the frame
+            return  # Exit the function since we don't need to add widgets if planner_type is 0
+
+        # If planner type is 1, we create the grid of textboxes and labels
+        else:
+            # Clear existing widgets in the frame first to avoid duplication
+            for widget in self.planner_load_transfer_frame.winfo_children():
+                widget.destroy()
+
+            # Add a label above the textboxes
+            title_label = ctk.CTkLabel(self.planner_load_transfer_frame,
+                                       text="Vehicle Parameters for Load-transfer Planner: Static Weights --> (kg) | Wheelbase/Track-Width --> (meters)")
+            title_label.grid(row=0, column=0, columnspan=2, pady=10, padx=5, sticky="w")
+
+            labels = ['Front-Left', 'Front-Right', 'Rear-Left', 'Rear-Right', 'Wheelbase', 'Track-Width']
+            row = 1  # Start from row 1 since row 0 has the title label
+            col = 0  # Start from column 0
+
+            # Loop through labels and create corresponding textboxes
+            for i, label_text in enumerate(labels):
+                # Create a label for each measurement (weight, wheelbase, track width)
+                label = ctk.CTkLabel(self.planner_load_transfer_frame, text=label_text)
+                label.grid(row=row, column=col, padx=2, pady=2, sticky="w")
+
+                # Create a corresponding entry field for the measurement
+                measurement_entry = ctk.CTkEntry(self.planner_load_transfer_frame)
+                measurement_entry.grid(row=row, column=col + 1, padx=5, pady=5, sticky="w")
+
+                # Store the entry widget in the dictionary for later use
+                self.vehicle_parameters[label_text] = measurement_entry
+
+                # Move to next column or row (2 columns per row)
+                col += 2
+                if col >= 4:  # After filling 2 columns, move to the next row
+                    col = 0
+                    row += 1
+
+            # Add a Button to trigger saving into the dictionary
+            save_button_lt = ctk.CTkButton(master=self.planner_load_transfer_frame, text="Apply",
+                                           command=self.save_vehicle_load)
+            save_button_lt.grid(row=row, column=0, columnspan=2, pady=10)  # Ensure the button spans the whole row
 
     ''' Helper functions'''
     # Rostopic functions
@@ -373,6 +434,7 @@ class Planning_Controls(ctk.CTkFrame):
             self.show_warning_cost("Control Action Penalty")
             return
 
+        messagebox.showinfo("Success","MPC cost matrix has been saved successfully!")
         self.controller.args_dict['Planning_Controls']['Q'] = state_penalty
         self.controller.args_dict['Planning_Controls']['R'] = control_penalty
 
@@ -388,7 +450,7 @@ class Planning_Controls(ctk.CTkFrame):
         if not self.validate_input_horizon(planner_horizon):
             self.show_warning_horizon("Control Action Penalty")
             return
-
+        messagebox.showinfo("Success","Controller/Planner horizons have been saved successfully!")
         self.controller.args_dict['Planning_Controls']['N'] = model_control_horizon
         self.controller.args_dict['Planning_Controls']['N_p'] = planner_horizon
 
@@ -427,6 +489,36 @@ class Planning_Controls(ctk.CTkFrame):
         planner_type_map = {0: "Curvature_based", 1: "Load_transfer_based"}
         planner_type = self.radio_var_planner_type.get()
         self.controller.args_dict['Planning_Controls']['Planner_type'] = planner_type_map[int(planner_type)]
+        # self.update_ui_load_transfer_parameters(planner_type)
+
+    def save_vehicle_load(self):
+        # Iterate over the key-value pairs in the self.vehicle_parameters dictionary
+        # Create a new dict
+        validated_params = {}
+        for label_text, entry in self.vehicle_parameters.items():
+            # Get the value entered in the entry field
+            param_value = entry.get()
+            try:
+                # Try to convert the weight value to a float
+                param_value = float(param_value)
+            except ValueError:
+                # If the value can't be converted to a float, show a warning message
+                messagebox.showwarning("Invalid Input",
+                                       f"Invalid weight entered for {label_text}. Please enter a valid number.")
+                return  # Exit the function after showing the warning
+
+            # Optionally, check if the value is positive (as vehicle weight should be positive)
+            if param_value <= 0:
+                messagebox.showwarning("Invalid Input",
+                                       f"Invalid weight entered for {label_text}. Weight should be a positive number.")
+                return  # Exit the function after showing the warning
+
+            # If all the validation checks are successful, rewrite the dict with base value
+            validated_params[label_text] = param_value
+
+        # If all entries are valid, you can proceed with saving or further processing the data
+        messagebox.showinfo("Success", "Vehicle parameters have been saved successfully!")
+        self.controller.args_dict['Planning_Controls']['Vehicle_Parameters'] = validated_params
 
 
     '''Validation Functions'''

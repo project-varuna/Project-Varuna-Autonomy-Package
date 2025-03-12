@@ -1,3 +1,12 @@
+03/12/25
+***Motion Planning***
+Bug and typo fixes
+Added more info messages for successful validation checks
+*** Major update:
+    - Refactored the control+planner horizon and the motion planning selection frames into 1 single function/frame
+    - Created a new function/frame to consider the vehicle loads for the load transfer based planner called "update_ui_load_transfer_parameters"
+    - Added checks for ensuring that float values are entered
+
 01/21/25
 ***Modeling***
 Added new functionality to provide curvature limits

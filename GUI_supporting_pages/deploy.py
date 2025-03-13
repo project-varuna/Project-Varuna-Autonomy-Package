@@ -218,14 +218,14 @@ class Deploy(ctk.CTkFrame):
         # Display the selected file index
 
         self.selected_file_label = ctk.CTkLabel(master=self.test_record_frame, text="Selected File Name: 0")
-        self.selected_file_label.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+        self.selected_file_label.grid(row=1, column=1, columnspan=3, padx=10, pady=10, sticky="w")
 
         # Bind the slider's value change event to update the label
         self.scroll_wheel.bind("<B1-Motion>", self.update_file_label)
 
     def update_file_label(self, event):
         selected_index = int(self.scroll_wheel.get())
-        self.selected_file_label.configure(text=f"Selected File Name: {self.file_list[selected_index]}")
+        self.selected_file_label.configure(text=f"Selected Trajectory: {self.file_list[selected_index]}")
         self.controller.args_dict['Deploy']['Traj_index'] = selected_index
 
     def print_arg_var(self):

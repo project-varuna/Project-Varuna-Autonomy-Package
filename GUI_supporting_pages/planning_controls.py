@@ -10,6 +10,7 @@ class Planning_Controls(ctk.CTkFrame):
 
         self.controller = controller
 
+
         # configure the grid layout for the main frame
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -180,7 +181,7 @@ class Planning_Controls(ctk.CTkFrame):
                                                value=1, command=self.save_pose_topic_type)
         self.pose_type_2d.grid(row=2, column=3, padx=(10, 10), pady=(10, 10), sticky="ew")
         self.rostopic_imu_label = ctk.CTkLabel(self.topic_selection_frame, text="IMU topic", anchor="w")
-        self.rostopic_imu_label.grid(row=3, column=0, columnspan=2, sticky="ew")
+        self.rostopic_imu_label.grid(row=3, column=0, sticky="ew")
         # Label for pose topic type
         self.rostopic_imu_type_label = ctk.CTkLabel(self.topic_selection_frame, text="Frame Type", anchor="w")
         self.rostopic_imu_type_label.grid(row=3, column=2, columnspan=1, sticky="ew")
@@ -231,14 +232,29 @@ class Planning_Controls(ctk.CTkFrame):
     '''Event functions'''
     def refresh(self):
         mmpk_type = self.controller.args_dict['Modeling'].get('MMPK_Type')
-        if hasattr(self, 'rostopic_imu_label'):
-            self.rostopic_imu_label.grid_forget()
-        # if hasattr(self, 'imu_topic_dropdown'):
-            # self.imu_topic_dropdown.grid_forget()
-        # self.update_ui_rostopic_select(mmpk_type)
+        # if mmpk_type == "Static":
+            # Dont give the user ability to add IMU topic / type
+            # List of widget names to hide
+            # widgets_to_hide = [
+            #     'rostopic_imu_label',
+            #     'imu_topic_dropdown',
+            #     'pose_type_point',
+            #     'pose_type_2d',
+            #     'rostopic_imu_type_label'
+            # ]
+
+            # Loop through each widget and hide it if it exists
+            # for widget_name in widgets_to_hide:
+            #     widget = getattr(self, widget_name, None)
+            #     if widget:
+            #         widget.grid_forget()
+            # if self.controller.args_dict.get('Planning_Controls', {}).get('IMU_topic') is not None:
+            #     del self.controller.args_dict['Planning_Controls']['IMU_topic']
+            # if self.controller.args_dict.get('Planning_Controls', {}).get('IMU_frame_type') is not None:
+            #     del self.controller.args_dict['Planning_Controls']['IMU_frame_type']
+
         self.planner_control_parameter_selection(mmpk_type)
         self.update_ui_load_transfer_parameters(mmpk_type)
-        # self.update_ui_motion_planner_type(mmpk_type)
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         ctk.set_appearance_mode(new_appearance_mode)
@@ -356,7 +372,7 @@ class Planning_Controls(ctk.CTkFrame):
 
         self.planner_load_transfer_frame = ctk.CTkFrame(self)
         self.planner_load_transfer_frame.grid(row=2, column=3, columnspan=2, padx=(20, 20), pady=(20, 0), sticky="nsew")
-        self.vehicle_parameters = {}
+        self.vehicle_parameters = {} # Adding the vehicle parameters here so they don't get refreshed
 
 
 
@@ -395,6 +411,11 @@ class Planning_Controls(ctk.CTkFrame):
 
                 # Create a corresponding entry field for the measurement
                 measurement_entry = ctk.CTkEntry(self.planner_load_transfer_frame)
+
+                # If vehicle_parameters dictionary already has a value for this label, use it to set the textbox value
+                if label_text in self.vehicle_parameters:
+                    measurement_entry.insert(0, self.vehicle_parameters[label_text])  # Pre-fill with stored value
+
                 measurement_entry.grid(row=row, column=col + 1, padx=5, pady=5, sticky="w")
 
                 # Store the entry widget in the dictionary for later use

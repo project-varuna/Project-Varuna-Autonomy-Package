@@ -443,7 +443,7 @@ class Modeling(ctk.CTkFrame):
         if not self.validate_num_models(num_models):
             self.show_warning_num_models("Number of Models")
             return
-
+        messagebox.showinfo("Success", "Number of models set!")
         self.controller.args_dict['Modeling']['Num_models'] = num_models
 
     def save_curvature_lim(self):
@@ -452,7 +452,7 @@ class Modeling(ctk.CTkFrame):
         if not self.validate_curvature_lim(curvature_limits):
             self.show_warning_curvature_lim("Curvature limits")
             return
-
+        messagebox.showinfo("Success", "Curvature limits set!")
         self.controller.args_dict['Modeling']['Curvature_limits'] = curvature_limits
 
 
@@ -475,6 +475,7 @@ class Modeling(ctk.CTkFrame):
             self.show_warning_steer_lim("Steering limits")
             return
 
+        messagebox.showinfo("Success", "Custom platform details have been saved successfully!")
         '''Update data to dict'''
         self.controller.args_dict['Modeling']['Platform_Custom_Name'] = platform_name
         self.controller.args_dict['Modeling']['Platform_Custom_Vel_Lim'] = platform_vel_lim
@@ -548,7 +549,7 @@ class Modeling(ctk.CTkFrame):
 
     def validate_platform_name(self, input_str):
         # Regular expression to check if the string contains only alphanumeric characters (no spaces, no special characters)
-        if re.match("^[a-zA-Z0-9]*$", input_str):
+        if re.match("^[a-zA-Z0-9]*$", input_str) and len(input_str)>0:
             return True
         else:
             return False

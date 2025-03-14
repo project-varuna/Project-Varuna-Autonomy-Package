@@ -208,15 +208,17 @@ class Deploy(ctk.CTkFrame):
     '''Event functions'''
 
     def test_trajectory_selection_pane(self):
-        self.file_list = os.listdir(self.controller.args_dict['Modeling']['Test_data_folder'])
+        # Get the list of files in the test data folder and sort them
+        self.file_list = sorted(os.listdir(self.controller.args_dict['Modeling']['Test_data_folder']))
         file_count = len(self.file_list)
         self.test_data_count = file_count
+
+        # Create a slider to select a trajectory
         self.scroll_wheel = ctk.CTkSlider(master=self.test_record_frame, from_=0, to=self.test_data_count-1,
                                           number_of_steps=self.test_data_count-1)
         self.scroll_wheel.grid(row=1, column=0, padx=10, pady=10, sticky="w")
 
-        # Display the selected file index
-
+        # Display the selected file name
         self.selected_file_label = ctk.CTkLabel(master=self.test_record_frame, text="Selected File Name: 0")
         self.selected_file_label.grid(row=1, column=1, columnspan=3, padx=10, pady=10, sticky="w")
 
@@ -225,7 +227,8 @@ class Deploy(ctk.CTkFrame):
 
     def update_file_label(self, event):
         selected_index = int(self.scroll_wheel.get())
-        self.selected_file_label.configure(text=f"Selected Trajectory: {self.file_list[selected_index]}")
+        selected_file = self.file_list[selected_index]  # Use the sorted file list
+        self.selected_file_label.configure(text=f"Selected Trajectory: {selected_file}")
         self.controller.args_dict['Deploy']['Traj_index'] = selected_index
 
     def print_arg_var(self):
